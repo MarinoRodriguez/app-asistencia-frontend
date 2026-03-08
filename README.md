@@ -1,30 +1,50 @@
-# ClientReact
+# App Asistencia - Frontend
 
-Frontend React para `app-asistencia`, replicando los flujos del cliente Blazor (`AssistantApp.Client`) y consumiendo la API de `AssistantApp.API`.
+Frontend web para gestión de asistencia (admin y staff). Construido con **React + Vite** y servido por **Nginx** en contenedor.
 
-## Setup
+## Requisitos
+- Node.js 20+
+- npm
+- Docker (opcional para contenedores)
 
-1. Copia variables de entorno:
-
-```bash
-cp .env.example .env
-```
-
-2. Instala dependencias y ejecuta:
-
+## Desarrollo local
 ```bash
 npm install
 npm run dev
 ```
 
-## Variables
+Por defecto el frontend apunta a `https://localhost:7224`. Puedes cambiarlo con:
 
-- `VITE_API_URL`: URL base del backend API (ej: `https://localhost:7224`).
+```bash
+VITE_API_URL=http://localhost:8080 npm run dev
+```
 
-## Rutas
+## Build
+```bash
+npm run build
+npm run preview
+```
 
-- `/` Inicio (eventos activos + accesos admin)
-- `/attendance/:eventId` Toma de asistencia (staff mobile)
-- `/admin/people` CRUD de personas
-- `/admin/groups` CRUD de grupos
-- `/admin/events` CRUD de eventos + invitaciones
+## Docker (runtime config)
+El contenedor **inyecta** el API URL en runtime con `VITE_API_URL`:
+
+```bash
+docker run -p 80:80 \
+  -e VITE_API_URL=http://localhost:8080 \
+  repo/app-asistencia-frontend:1.0.0
+```
+
+## Compose de ejemplo
+En el root del repo hay un ejemplo:
+
+- `docker-compose.example.yml`
+
+## Estructura
+- `src/pages` vistas principales
+- `src/components` componentes UI y layout
+- `src/api` cliente HTTP
+
+## Notas
+- El frontend consume el backend via `window.__ENV__.VITE_API_URL` (runtime).
+- Si estás dentro de `docker-compose`, usa `http://api:8080`.
+- Desde el navegador local, usa el puerto publicado del host (ej. `http://localhost:8074`).
